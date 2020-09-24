@@ -7,3 +7,8 @@ class Video(models.Model):
     description = models.CharField(max_length=500)
     published_at = models.DateTimeField(auto_now_add=True, db_index=True)
     thumbnail = models.CharField(max_length=500)
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['-published_at']),
+        ]
