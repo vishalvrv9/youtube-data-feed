@@ -48,7 +48,7 @@
           <div class="card mb-4 shadow-sm">
             <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="{{video.thumbnail}}" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"></img>
             <div class="card-body">
-              <p class="card-text">{{ video.title }}</p>
+              <a href="https://www.youtube.com/watch?v={{video.video_id}}"" color=" blue">{{video.title}}</a>
               <p class="card-text">Description: {{ video.description }}</p>
               <p class="card-text">publishedAt: {{ video.published_at }}</p>
               <div class="d-flex justify-content-between align-items-center">
@@ -63,6 +63,30 @@
       </div>
     </div>
   </div>
+
+<nav aria-label="Page navigation">
+  {% if videos.has_other_pages %}
+  <ul class="pagination nav justify-content-center">
+    {% if videos.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ videos.previous_page_number }}">Previous</a></li>
+    {% else %}
+    <li class="page-item"><a class="disabled" href="#">Previous</a></li>
+    {% endif %}
+    {% for i in videos.paginator.page_range %}
+    {% if videos.number == i %}
+    <li class="page-item"><a class="page-link" href="#">{{ i }}</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if videos.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ videos.next_page_number }}">Next</a></li>
+    {% else %}
+    <li class="page-item"><a class="disabled" href="#">Next</a></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</nav>
 
 </main>
 </body>

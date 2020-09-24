@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from datetime import datetime, timezone
+from django.core.paginator import Paginator
 from background_task import background
 from .models import Video
 import requests
@@ -8,9 +9,14 @@ import requests
 # Create your views here.
 def index(request):
 
-    # repeats every 10 seconds
+    # async process repeats every 10 seconds
     fetch_feed(repeat=10)
-    videos = Video.objects.all()
+
+    videos_list = Video.objects.all()
+    paginator = Paginator(videos_list, 6)
+    page = request.GET.get('page', 1)
+
+    videos = paginator.page(page)
     context ={
         'videos' : videos
     }
@@ -23,7 +29,7 @@ def fetch_feed():
     params = {
         'part':'snippet',
         # 'publishedAfter': local_time.isoformat(),
-        'maxResults':5,
+        'maxResults':12,
         'order':'date',
         'q':'cricket',
         'type':'video',
