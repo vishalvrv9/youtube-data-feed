@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.db.models import Q
 from background_task import background
 from .models import Video
 import requests
@@ -13,7 +14,13 @@ def index(request):
     fetch_feed(repeat=10)
 
     # list all videos from model
+    query = request.GET.get("q", None)
     videos_list = Video.objects.all().order_by('-published_at')
+    if query is not None:
+        videos_list = videos_list.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) 
+                )
 
     # setup paginator for 6 per page
     paginator = Paginator(videos_list, 6)
